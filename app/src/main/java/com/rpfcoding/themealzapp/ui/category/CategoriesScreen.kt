@@ -7,19 +7,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.rpfcoding.themealzapp.domain.model.Category
@@ -71,11 +67,11 @@ fun CategoryItem(
             .height(110.dp)
             .padding(horizontal = 4.dp, vertical = 8.dp),
         onClick = {
-              onItemClick(category.name)
+            onItemClick(category.name)
         },
         shape = RoundedCornerShape(16.dp)
     ) {
-        Row() {
+        Row {
 
             Image(
                 modifier = Modifier
@@ -111,13 +107,15 @@ fun CategoryItem(
 }
 
 @OptIn(ExperimentalMaterialApi::class)
-@Preview()
+@Preview
 @Composable
 fun previewCategoryItem() {
-    CategoryItem(category = Category(
-        id = "1",
-        name = "Lorem",
-        thumbUrl = "https://test.com",
-        description = "Lorem Ipsum"
-    ))
+    CategoryItem(
+        category = Category(
+            id = "1",
+            name = "Lorem",
+            thumbUrl = "https://test.com",
+            description = "Lorem Ipsum"
+        )
+    )
 }
