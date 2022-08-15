@@ -1,18 +1,24 @@
 package com.rpfcoding.themealzapp.ui.category
 
 import android.widget.Toast
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -61,23 +67,29 @@ fun CategoryItem(
     category: Category,
     onItemClick: (name: String) -> Unit = {},
 ) {
+    var expanded by remember {
+        mutableStateOf(false)
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(110.dp)
-            .padding(horizontal = 4.dp, vertical = 8.dp),
+            .padding(horizontal = 8.dp, vertical = 8.dp),
         onClick = {
             onItemClick(category.name)
         },
         shape = RoundedCornerShape(16.dp)
     ) {
-        Row {
+        Row(
+            modifier = Modifier
+                .animateContentSize()
+        ) {
 
             Image(
                 modifier = Modifier
                     .fillMaxHeight()
+                    .size(90.dp)
                     .padding(8.dp)
-                    .weight(0.2f)
                     .align(Alignment.CenterVertically),
                 painter = rememberImagePainter(category.thumbUrl),
                 contentDescription = null
@@ -92,16 +104,39 @@ fun CategoryItem(
                 Text(
                     text = category.name,
                     fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.body1
+                    style = MaterialTheme.typography.h6
                 )
-                Text(
-                    text = category.description,
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.subtitle1,
-                    fontStyle = FontStyle.Italic
-                )
+                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                    Text(
+                        text = category.description,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.subtitle2,
+                        fontStyle = FontStyle.Italic,
+                        maxLines = if (expanded) 10 else 3,
+                        textAlign = TextAlign.Start
+                    )
+                }
             }
+
+            Icon(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxHeight()
+                    .align(
+                        if(expanded) {
+                            Alignment.Bottom
+                        } else {
+                            Alignment.CenterVertically
+                        }
+                    )
+                    .clickable {
+                        expanded = !expanded
+                    },
+                imageVector = if (expanded) {
+                    Icons.Filled.KeyboardArrowUp
+                } else Icons.Filled.KeyboardArrowDown,
+                contentDescription = null,
+            )
         }
     }
 }
