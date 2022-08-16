@@ -1,4 +1,4 @@
-package com.rpfcoding.themealzapp.ui.category
+package com.rpfcoding.themealzapp.ui.category_list
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

@@ -4,7 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.ExperimentalMaterialApi
-import com.rpfcoding.themealzapp.ui.category.CategoriesScreen
+import com.ramcosta.composedestinations.DestinationsNavHost
+import com.rpfcoding.themealzapp.ui.NavGraphs
 import com.rpfcoding.themealzapp.ui.theme.TheMealzAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -15,7 +16,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TheMealzAppTheme {
-                CategoriesScreen()
+                DestinationsNavHost(navGraph = NavGraphs.root)
             }
         }
     }

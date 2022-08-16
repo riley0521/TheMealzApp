@@ -1,6 +1,5 @@
-package com.rpfcoding.themealzapp.ui.category
+package com.rpfcoding.themealzapp.ui.category_list
 
-import android.widget.Toast
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -15,7 +14,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -24,23 +22,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.rpfcoding.themealzapp.domain.model.Category
+import com.rpfcoding.themealzapp.ui.destinations.CategoryInfoScreenDestination
 
 @ExperimentalMaterialApi
+@RootNavGraph(start = true)
+@Destination
 @Composable
 fun CategoriesScreen(
-    viewModel: CategoriesViewModel = hiltViewModel()
+    viewModel: CategoriesViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator
 ) {
 
     val state = viewModel.state
-
-    val context = LocalContext.current
 
     if (state.errorMsg == null) {
         LazyColumn {
             items(state.categories) { category ->
                 CategoryItem(category = category) {
-                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                    navigator.navigate(CategoryInfoScreenDestination(category))
                 }
             }
         }
@@ -65,7 +68,7 @@ fun CategoriesScreen(
 @Composable
 fun CategoryItem(
     category: Category,
-    onItemClick: (name: String) -> Unit = {},
+    onItemClick: (category: Category) -> Unit = {},
 ) {
     var expanded by remember {
         mutableStateOf(false)
@@ -76,7 +79,7 @@ fun CategoryItem(
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 8.dp),
         onClick = {
-            onItemClick(category.name)
+            onItemClick(category)
         },
         shape = RoundedCornerShape(16.dp)
     ) {
@@ -106,13 +109,12 @@ fun CategoryItem(
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.h6
                 )
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                if (expanded) {
                     Text(
                         text = category.description,
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.subtitle2,
                         fontStyle = FontStyle.Italic,
-                        maxLines = if (expanded) 10 else 3,
                         textAlign = TextAlign.Start
                     )
                 }
@@ -123,7 +125,7 @@ fun CategoryItem(
                     .padding(16.dp)
                     .fillMaxHeight()
                     .align(
-                        if(expanded) {
+                        if (expanded) {
                             Alignment.Bottom
                         } else {
                             Alignment.CenterVertically
